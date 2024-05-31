@@ -1,4 +1,4 @@
-FROM --platform=linux/arm64 debian:bullseye
+FROM debian:bookworm
 
 COPY files .
 
@@ -11,13 +11,19 @@ python3-gdal \
 python3-netifaces \
 python3-pil \
 python3-pigpio \
-gnupg
+gnupg \
+iproute2
 
 RUN apt-key add - < ./oss.boating.gpg.key
 RUN mv oss.boating.gpg /usr/share/keyrings/
 
-RUN \
-echo '#deb [signed-by=/usr/share/keyrings/oss.boating.gpg] https://www.free-x.de/debpreview bullseye main contrib non-free' >/etc/apt/sources.list.d/bullseye-extra.list && \
-echo 'deb [signed-by=/usr/share/keyrings/oss.boating.gpg] https://www.free-x.de/debian bullseye main contrib non-free' >/etc/apt/sources.list.d/bullseye-extra.list
+RUN printf "deb [signed-by=/usr/share/keyrings/oss.boating.gpg] https://www.free-x.de/debpreview RELEASE main\n" > /etc/apt/sources.list.d/avnav.list 
+RUN printf "deb [signed-by=/usr/share/keyrings/oss.boating.gpg] https://www.free-x.de/debian RELEASE main\n" >> /etc/apt/sources.list.d/avnav.list
+RUN . /etc/os-release && sed -i s/RELEASE/$VERSION_CODENAME/g /etc/apt/sources.list.d/avnav.list
 RUN apt-get update 
-RUN apt-get install -y avnav-ocharts-plugin
+RUN apt-get install -y avnav avnav-mapproxy-plugin avnav-ochartsng
+RUN chmod +x /startavnav.sh 
+RUN if [ ! -d /var/lib/avnav ]; then mkdir /var/lib/avnav ; fi
+RUN chown -R avnav /var/lib/avnav
+
+ENTRYPOINT ["/startavnav.sh"]
