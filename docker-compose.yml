@@ -1,0 +1,19 @@
+---
+services:
+  avnav:
+    image: xfreex/avnav-daily:latest
+    container_name: avnav
+    restart: unless-stopped
+    privileged: true
+    user: 1000:1000
+    volumes:
+      - /dev:/dev
+      - ./avnav:/var/lib/avnav
+    ports:
+      - 8080:8080
+      - 8082:8082
+    environment: 
+      - UID=1000
+      - GID=1000
+
+
