@@ -3,7 +3,9 @@ FROM debian:bookworm-slim
 COPY files .
 
 RUN apt-get update
-RUN apt-get upgrade
+RUN apt-get -y upgrade  
+RUN apt-get -y --no-install-recommends install ca-certificates
+RUN update-ca-certificates
 RUN apt-get install -y python3-bluez \
 python3-pyudev \
 python3-serial \
@@ -21,7 +23,7 @@ RUN printf "deb [signed-by=/usr/share/keyrings/oss.boating.gpg] https://www.free
 RUN printf "deb [signed-by=/usr/share/keyrings/oss.boating.gpg] https://www.free-x.de/debian RELEASE main\n" >> /etc/apt/sources.list.d/avnav.list
 RUN . /etc/os-release && sed -i s/RELEASE/$VERSION_CODENAME/g /etc/apt/sources.list.d/avnav.list
 RUN apt-get update 
-RUN apt-get install -y avnav avnav-mapproxy-plugin avnav-ochartsng
+RUN apt-get install -y avnav avnav-mapproxy-plugin avnav-ochartsng avnav-history-plugin
 RUN chmod +x /startavnav.sh 
 RUN if [ ! -d /var/lib/avnav ]; then mkdir /var/lib/avnav ; fi
 RUN chown -R avnav /var/lib/avnav
