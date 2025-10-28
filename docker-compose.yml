@@ -12,7 +12,7 @@ services:
       - ./avnav:/var/lib/avnav
     ports:
       - 8080:8080
-      - 8082:8082
+      - 8083:8083
     environment: 
       - UID=1000
       - GID=1000
