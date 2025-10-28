@@ -16,7 +16,6 @@ python3-pigpio \
 gnupg \
 iproute2
 
-RUN apt-key add - < ./oss.boating.gpg.key
 RUN mv oss.boating.gpg /usr/share/keyrings/
 
 RUN printf "deb [signed-by=/usr/share/keyrings/oss.boating.gpg] https://www.free-x.de/debpreview RELEASE main\n" > /etc/apt/sources.list.d/avnav.list 
